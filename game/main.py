@@ -95,14 +95,6 @@ def draw(window, tiles):
 
     window.fill(BACKGROUND_COLOR)
 
-    # if end_move(tiles) == "lost":
-    #     window.fill(BACKGROUND_COLOR)
-    #     text = "YOU LOST"
-    #     GAME_FONT = pygame.freetype.SysFont("comicsans", 24)
-    #     GAME_FONT.render_to(window, (50,50), text, (0, 0, 0))
-
-    # else:    
-
     for tile in tiles.values():
         tile.draw(window)
     
@@ -213,10 +205,10 @@ def move_tiles(window, tiles, clock, direction):
 def end_move(tiles):
     if len(tiles) == 16:
         return "lost"
-
-    row, col = get_random_pos(tiles)
-    tiles[f"{row}{col}"] = Tile(random.choice([2, 4]), row, col)
-    return "continue"
+    else:
+        row, col = get_random_pos(tiles)
+        tiles[f"{row}{col}"] = Tile(random.choice([2, 4]), row, col)
+        return "continue"
 
 
 def update_tiles(window, tiles, sorted_tiles):
@@ -234,16 +226,22 @@ def generate_tiles():
     
     return tiles
 
+def game_over_func(window):
+    game_over_text = FONT.render("GAME OVER!", True, (0, 0, 0))
+    game_over_rect = game_over_text.get_rect(center= (WIDTH//2, HEIGHT//2))
+    window.blit(game_over_text, game_over_rect)
+
 #Main Loop
 def main(window):
     
     clock = pygame.time.Clock()
     run = True
+    game_over = False
 
     tiles = generate_tiles()
 
     while run:
-        #Runs the window at 60 fps
+        
         clock.tick(FPS)
          # Event Loop
         for event in pygame.event.get():
@@ -251,7 +249,7 @@ def main(window):
                 run = False
                 break
 
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     move_tiles(window, tiles, clock, "left")
                 if event.key == pygame.K_RIGHT:
