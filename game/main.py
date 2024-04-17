@@ -1,7 +1,6 @@
 import pygame
 import random
 import math
-import pygame.freetype
 
 pygame.init()
 
